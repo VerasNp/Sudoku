@@ -1,0 +1,4 @@
+{
+  "HINT_FILE": "O dado %s tem o formato de sua entrada errado no arquivo de configuração de dicas!\nPor favor, siga o formato <COLUNA(A-I)>, <LINHA(1-9)>: <NUMERO(1-9)> ou <COLUNA(A-I)>, <LINHA(1-9)>: <NUMERO(1-9)>",
+  "INPUT": "O dado %s tem o formato errado!\nPor favor, siga o formato <COLUNA(A-I)>, <LINHA(1-9)>: <NUMERO(1-9)> ou <COLUNA(A-I)>, <LINHA(1-9)>: <NUMERO(1-9)>"
+}
