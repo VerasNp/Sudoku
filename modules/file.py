@@ -37,7 +37,7 @@ def file_exists(data: str, ext=None) -> True:
     :param data:
     :return:
     """
-    path = "/" + path_constructor(data, ext)
+    path = path_constructor(data, ext)
 
     if not os.path.isfile(path):
         raise Exception(f"{path} not found!")

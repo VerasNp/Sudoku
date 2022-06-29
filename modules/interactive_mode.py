@@ -40,6 +40,6 @@ def init_matrix_hints(matrix, data):
 def check_finished(matrix):
     for i in range(len(matrix)):
         for j in range(i):
-            if j == " ":
-                break
+            if " " in matrix[i][j]["number"]:
+                return
     exit("Parabens! Você completou o Sudoku!")
