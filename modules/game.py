@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from modules.interactive_mode import start_interactive_mode
 from modules.matrix import init_matrix
 

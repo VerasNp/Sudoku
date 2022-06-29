@@ -6,7 +6,7 @@ def search_data(data, search, is_delete=False):
         if is_delete:
             return re.search(r"(?!D)[A-I]", data).group(0)
         else:
-            return re.search("^[A-I]", data).group(0)
+            return re.search("^[A-Ia-i]", data).group(0)
     elif search == 'LIN':
         if is_delete:
             return re.search(r"[1-9]$", data).group(0)

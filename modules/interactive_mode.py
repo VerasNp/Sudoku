@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from modules.file import read_file
 from modules.matrix import insert_input_sudoku
 from modules.render import render_sudoku
