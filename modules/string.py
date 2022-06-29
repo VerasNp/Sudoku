@@ -4,7 +4,7 @@ import re
 def search_data(data, search, is_delete=False):
     if search == 'COL':
         if is_delete:
-            return re.search(r"(?!D)[A-I]", data).group(0)
+            return re.search(r"(?!D)[A-Ia-i]", data).group(0)
         else:
             return re.search("^[A-Ia-i]", data).group(0)
     elif search == 'LIN':
