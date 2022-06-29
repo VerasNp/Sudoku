@@ -1,18 +1,29 @@
 import re
 
 
-def search_data(data, search):
+def search_data(data, search, is_delete=False):
     if search == 'COL':
-        return re.search("^[A-I]", data).group(0)
+        if is_delete:
+            return re.search(r"(?!D)[A-I]", data).group(0)
+        else:
+            return re.search("^[A-I]", data).group(0)
     elif search == 'LIN':
-        return re.search(r"[1-9](?=:)", data).group(0)
+        if is_delete:
+            return re.search(r"[1-9]$", data).group(0)
+        else:
+            return re.search(r"[1-9](?=:)", data).group(0)
     elif search == 'NUMBER':
         return re.search(r"[1-9]$", data).group(0)
     else:
-        raise Exception('Parâmetro %s não mapeado' % search)
+        raise Exception('%s not mapped' % search)
 
 
-def string_navigation(string: str):
-    if not string:
-        return
+def string_navigation(string: str) -> list:
+    """
+    Returns a list based on string separated by points
+    :param string:
+    :return:
+    """
+
+    # TODO: Improve separator check!
     return string.split(".")

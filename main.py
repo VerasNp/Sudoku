@@ -1,26 +1,35 @@
 import sys
-from modules.interactive_mode import start_interactive_mode
-from modules.validators import validate_input
-from modules.file import read_file, file_exists, file_is_txt
+
+from config import set_environment
+from modules.file import file_exists_list, check_ext_list
+from modules.game import start_game
+from modules.json import get_json_key_content
 
 
-def bootstrapper(args=None):
+def bootstrapper(args: list = None) -> None:
+    """
+    Initiates the sudoku
+    :param args:
+    :return:
+    """
     try:
-        aux = args[1:]
-        if len(aux) > 1:
-            return
-        else:
-            file_exists(aux[0])
-            file_is_txt(aux[0])
-            content = read_file(aux[0])
-            validate_input(
-                content, "resources.messages.err.pt_br.HINT_FILE", True)
-            start_interactive_mode()
+        set_environment()
+
+        args_copy = args[1:]
+
+        if len(args_copy) >= 3 or len(args_copy) == 0:
+            raise Exception(get_json_key_content("resources.messages.err.pt_br", "ARGS_WRONG"))
+
+        file_exists_list(args_copy)
+
+        check_ext_list(args_copy, "txt")
+
+        start_game(args_copy)
     except Exception as e:
         exit(e)
 
 
-def main():
+def main() -> None:
     bootstrapper(sys.argv)
 
 
