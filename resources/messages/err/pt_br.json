@@ -1,12 +1,13 @@
 {
-  "INPUT": "O dado %s tem o formato errado!",
+  "INPUT": "A jogada %s tem o formato errado!",
   "FILE_404": "O arquivo %s não foi encontrado!",
   "ARGS_WRONG": "Quantidade de parâmetros inválido!",
   "HINT_QTD_MIN": "Quantidade de dicas inválida! Considere que o programa deve receber ao menos 1 dica!",
   "HINT_QTD_MAX": "Quantidade de dicas inválida! Considere que o programa deve receber no máximo 80 dicas!",
-  "DATA_LINE": "Inserção inválida! Na linha %d já existe o número %d!",
-  "DATA_COLUMN": "Inserção inválida! Na coluna %s já existe o número %d!",
-  "DATA_AREA": "Inserção inválida! No lugar <%s,%d> já existe o número %d!",
-  "DATA_HINT": "Inserção inválida! Na area <%s,%d> já existe uma dica!",
-  "HINT_DATA": "Este dado é uma dica!"
+  "DATA_LINE": "Insercao invalida! Ja existe o numero %s na linha %s!",
+  "DATA_COLUMN": "Insercao invalida! Ja existe o numero %s na coluna %s!",
+  "DATA_AREA": "Insercao invalida! Ja existe o numero %s na area referente a (%s,%s)!",
+  "DATA_HINT": "Inserção inválida! Na área já tem uma dica!",
+  "HINT_DATA": "(%s,%s) e uma dica!",
+  "BATCH_INPUT": "A jogada (%s,%s) eh invalida!"
 }
