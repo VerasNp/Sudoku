@@ -9,5 +9,6 @@
   "DATA_AREA": "Insercao invalida! Ja existe o numero %s na area referente a (%s,%s)!",
   "DATA_HINT": "Inserção inválida! Na área já tem uma dica!",
   "HINT_DATA": "(%s,%s) e uma dica!",
-  "BATCH_INPUT": "A jogada (%s,%s) eh invalida!"
+  "BATCH_INPUT": "A jogada (%s,%s) = %s eh invalida!",
+  "HINT_CONFIG": "Configuracao de dicas invalida."
 }

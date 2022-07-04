@@ -2,6 +2,7 @@ import copy
 
 from modules.file import read_file
 from modules.matrix import insert_input_sudoku, init_matrix_hints, check_full
+from modules.render import render_sudoku
 
 
 def start_batch_mode(init_matrix, data):

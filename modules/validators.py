@@ -23,25 +23,25 @@ def validate_input(data: any, message: dict, hint=False):
 def validate_play(matrix, column, line, number, hint=False, batch=False):
 	validate_play_hint = True
 	if not hint:
-		validate_play_hint = validate_play_is_hint(matrix, column, line, batch)
+		validate_play_hint = validate_play_is_hint(matrix, column, line, number, batch)
 
 	if (validate_play_hint and
-					validate_area(matrix, column, line, number, batch) and
-					validate_line(matrix, column, line, number, batch) and
-					validate_column(matrix, column, line, number, batch)):
+		validate_area(matrix, column, line, number, batch) and
+		validate_line(matrix, column, line, number, batch) and
+		validate_column(matrix, column, line, number, batch)):
 		return True
 	else:
 		return False
 
 
-def validate_play_is_hint(matrix, column, line, batch):
-
+def validate_play_is_hint(matrix, column, line, number, batch):
 	if matrix[line][column]["hint"]:
 		col = search_key_by_value("COL", column)
 		lin = search_key_by_value("LIN", line)
 		if batch:
-			set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True}, (col, lin),
-												True)
+			set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
+							  (col, lin, number),
+							  True)
 			return False
 		else:
 			set_error_message({"message": "resources.messages.err.pt_br", "key": "HINT_DATA", "data": True}, (col, lin))
@@ -82,14 +82,15 @@ def check_area(matrix, number, batch, column, line, start_line, end_line, start_
 				if batch:
 					col = search_key_by_value("COL", column)
 					lin = search_key_by_value("LIN", line)
-					set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True}, (col, lin),
-														True)
+					set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
+									  (col, lin, number),
+									  True)
 					return False
 				else:
 					column = search_key_by_value("COL", j)
 					line = search_key_by_value("LIN", i)
 					set_error_message({"message": "resources.messages.err.pt_br", "key": "DATA_AREA", "data": True},
-														(number, column, line))
+									  (number, column, line))
 					return False
 			else:
 				return True
@@ -103,11 +104,11 @@ def validate_line(matrix, column, line, number, batch):
 				lin = search_key_by_value("LIN", line)
 				if batch:
 					set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
-														(col, lin), True)
+									  (col, lin, number), True)
 					return False
 				else:
 					set_error_message({"message": "resources.messages.err.pt_br", "key": "DATA_LINE", "data": True},
-														(number, lin))
+									  (number, lin))
 					return False
 	return True
 
@@ -120,11 +121,11 @@ def validate_column(matrix, column, line, number, batch):
 				lin = search_key_by_value("LIN", line)
 				if batch:
 					set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
-														(col, lin), True)
+									  (col, lin, number), True)
 					return False
 				else:
 					set_error_message({"message": "resources.messages.err.pt_br", "key": "DATA_COLUMN", "data": True},
-														(number, col))
+									  (number, col))
 					return False
 	return True
 
@@ -138,9 +139,7 @@ def validate_inputs_qtd(data):
 		raise Exception(get_json_key_content("resources.messages.err.pt_br", "HINT_QTD_MAX"))
 
 
-
-
-def set_error_message(message: dict, data, batch=False):
+def set_error_message(message: dict, data: object, batch: object = False) -> object:
 	"""
 	{"message": str, "key": str, "data", bool}
 		:param batch:

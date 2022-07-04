@@ -16,6 +16,7 @@ def start_interactive_mode(init_matrix, data):
             entry = input("Entre com a sua jogada: ")
             validate_input(entry, {"message": "resources.messages.err.pt_br", "key": "INPUT", "data": True})
             aux = insert_input_sudoku(initiated, entry, False, False)[:]
+            cls()
             render_sudoku(aux)
             check_full(aux)
         except KeyboardInterrupt:
