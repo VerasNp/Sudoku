@@ -1,17 +1,33 @@
+import collections
 import re
 
 from modules.dictionary import search_key_by_value
 from modules.json import get_json_key_content
+from modules.list import sanitize_list
+from modules.utils import dd
 
 
-def validate_input(data: any, message: dict, hint=False):
+def validate_input_format(
+	data: any,
+	message: dict,
+	hint=False):
+	"""
+	Validates input format
+	:param data:
+	:param message:
+	:param batch:
+	:param hint:
+	:return:
+	"""
 	if hint:
 		for i in range(len(data)):
 			if hint:
 				if re.match(r"^[A-I],[1-9]:[1-9]$", data[i]):
 					continue
 				else:
-					set_error_message(message, data[i])
+					set_error_message(
+						message=message
+					)
 		return
 	else:
 		if re.match(r"^[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data) or re.match(r"^D[A-Ia-i],[1-9]$", data):
@@ -130,24 +146,35 @@ def validate_column(matrix, column, line, number, batch):
 	return True
 
 
-def validate_inputs_qtd(data):
-	if len(data) < 1:
+def validate_hints_qtd(data: list) -> None:
+	"""
+	Validates hints quantity
+	:param data:
+	:param batch:
+	:return:
+	"""
+	total = len(data)
+
+	if total < 1:
 		raise Exception(get_json_key_content("resources.messages.err.pt_br", "HINT_QTD_MIN"))
-	elif len(data) == 80:
+	elif total == 80:
 		return
-	elif len(data) > 80:
+	elif total > 80:
 		raise Exception(get_json_key_content("resources.messages.err.pt_br", "HINT_QTD_MAX"))
 
 
-def set_error_message(message: dict, data: object, batch: object = False) -> object:
+def set_error_message(
+	message: dict,
+	data=None,
+	batch: object = False):
 	"""
-	{"message": str, "key": str, "data", bool}
-		:param batch:
-		:param message:
-		:param data:
-		:return:
+	Set error messages based on json keys
+	:param batch:
+	:param message:
+	:param data:
+	:return:
 	"""
-	if message["data"]:
+	if data is not None:
 		if batch:
 			print(get_json_key_content(message["message"], message["key"]) % data)
 		else:

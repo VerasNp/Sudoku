@@ -1,7 +1,7 @@
 {
   "INPUT": "A jogada %s tem o formato errado!",
   "FILE_404": "O arquivo %s não foi encontrado!",
-  "ARGS_WRONG": "Quantidade de parâmetros inválido!",
+  "ARGS_WRONG": "Parâmetros inválidos! Digite -h ou --help para obter ajuda!",
   "HINT_QTD_MIN": "Quantidade de dicas inválida! Considere que o programa deve receber ao menos 1 dica!",
   "HINT_QTD_MAX": "Quantidade de dicas inválida! Considere que o programa deve receber no máximo 80 dicas!",
   "DATA_LINE": "Insercao invalida! Ja existe o numero %s na linha %s!",

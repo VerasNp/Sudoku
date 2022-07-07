@@ -45,7 +45,7 @@ def file_exists(data: str, ext=None) -> True:
     return True
 
 
-def file_exists_list(data: list):
+def file_exists_list(data: list) -> None:
     """
     Validates if list of files exists
     :param data:
@@ -53,7 +53,7 @@ def file_exists_list(data: list):
     """
     for i in range(len(data)):
         if not os.path.isfile(data[i]):
-            raise Exception(f"{data[i]} not found!")
+            raise Exception("\033[1;31m" + f"{data[i]} não encontrado!")
 
 
 def path_constructor(data: str, ext=None) -> str:
@@ -78,6 +78,11 @@ def path_constructor(data: str, ext=None) -> str:
 
 
 def read_file(file):
+    """
+    Reads file line by line
+    :param file:
+    :return:
+    """
     content = []
     with open(file) as f:
         while True:
@@ -91,7 +96,7 @@ def read_file(file):
     return content
 
 
-def check_ext(data: Union[list, str], ext: str) -> bool:
+def check_ext(data: str, ext: str) -> bool:
     """
     Validates file extension
     :param data:
@@ -104,8 +109,14 @@ def check_ext(data: Union[list, str], ext: str) -> bool:
     return True
 
 
-def check_ext_list(data: list, ext: str):
+def check_ext_list(data: list, ext: str) -> bool:
+    """
+    Validates file extension (list)
+    :param data:
+    :param ext:
+    :return:
+    """
     for i in range(len(data)):
         if not os.path.splitext(data[i])[1] == ("." + ext):
-            raise Exception(f"{data[i]} with invalid extension!!")
+            raise Exception("\033[1;31mArquivo com extensão inválida!")
         return True
