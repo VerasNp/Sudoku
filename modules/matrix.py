@@ -81,6 +81,7 @@ def insert_input_sudoku(
 				search="LIN",
 				is_delete=True
 			)
+
 			if (validate_play_override_hint(
 				matrix=matrix,
 				column=column,
@@ -107,7 +108,6 @@ def insert_input_sudoku(
 					data_srch=data,
 					search="NUMBER"
 				)
-				# dd(column, line, number)
 				if (validate_play(
 					matrix=matrix,
 					column=column,

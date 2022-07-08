@@ -29,7 +29,7 @@ def search_data(
 			return search_value_by_key(
 				general_key="COL",
 				searched_key=sanitize_string(
-					data=re.search(r"(?!D)[A-Ia-i]", data_srch).group(0).upper(),
+					data=re.search(r"[A-Ia-i](?=\s*,)", data_srch).group(0).upper(),
 					mode="rmv_wtspc"))
 		else:
 			return search_value_by_key(

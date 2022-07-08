@@ -27,7 +27,7 @@ def start_interactive_mode(init_matrix: list, files: list):
 
 			new_matrix = insert_input_sudoku(initiated_matrix, entry, False, False)[:]
 
-			cls()
+			# cls()
 
 			render_sudoku(new_matrix)
 

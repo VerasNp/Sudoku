@@ -180,8 +180,11 @@ def check_area(
 	end_column: int,
 	hint: bool = False,
 	batch_mode: bool = False):
-	for i in range(start_line, end_line):
-		for j in range(start_column, end_column):
+	i = start_line
+	while i <= end_line:
+		j = start_column
+		while j <= end_column:
+			print(i, j)
 			if matrix[i][j]["number"] == number:
 				if hint:
 					exit(get_json_key_content("resources.messages.err.pt_br", "HINT_CONFIG"))
@@ -199,6 +202,8 @@ def check_area(
 							data=(number, column, line),
 							batch_mode=False)
 					return False
+			j += 1
+		i += 1
 	return True
 
 
