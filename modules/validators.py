@@ -184,7 +184,6 @@ def check_area(
 	while i <= end_line:
 		j = start_column
 		while j <= end_column:
-			print(i, j)
 			if matrix[i][j]["number"] == number:
 				if hint:
 					exit(get_json_key_content("resources.messages.err.pt_br", "HINT_CONFIG"))
