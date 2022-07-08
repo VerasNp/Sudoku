@@ -1,5 +1,4 @@
 import os.path
-from typing import Union
 
 from modules.string import string_navigation
 
@@ -46,14 +45,9 @@ def file_exists(data: str, ext=None) -> True:
 
 
 def file_exists_list(data: list) -> None:
-    """
-    Validates if list of files exists
-    :param data:
-    :return:
-    """
     for i in range(len(data)):
         if not os.path.isfile(data[i]):
-            raise Exception("\033[1;31m" + f"{data[i]} não encontrado!")
+            raise Exception(f"{data[i]} não encontrado!")
 
 
 def path_constructor(data: str, ext=None) -> str:
@@ -78,11 +72,6 @@ def path_constructor(data: str, ext=None) -> str:
 
 
 def read_file(file):
-    """
-    Reads file line by line
-    :param file:
-    :return:
-    """
     content = []
     with open(file) as f:
         while True:
@@ -97,26 +86,14 @@ def read_file(file):
 
 
 def check_ext(data: str, ext: str) -> bool:
-    """
-    Validates file extension
-    :param data:
-    :param ext:
-    :return:
-    """
     path = path_constructor(data, ext)
     if not os.path.splitext(path)[1] == ("." + ext):
         raise Exception(f"{data} with invalid extension!")
     return True
 
 
-def check_ext_list(data: list, ext: str) -> bool:
-    """
-    Validates file extension (list)
-    :param data:
-    :param ext:
-    :return:
-    """
+def list_check_ext(data: list, ext: str) -> bool:
     for i in range(len(data)):
         if not os.path.splitext(data[i])[1] == ("." + ext):
-            raise Exception("\033[1;31mArquivo com extensão inválida!")
+            raise Exception("Arquivo com extensão inválida! Por favor, se precisar de ajuda use o comando -h ou --help")
         return True

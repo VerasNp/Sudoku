@@ -1,14 +1,14 @@
 {
-  "INPUT": "A jogada %s tem o formato errado!",
-  "FILE_404": "O arquivo %s não foi encontrado!",
-  "ARGS_WRONG": "Parâmetros inválidos! Digite -h ou --help para obter ajuda!",
-  "HINT_QTD_MIN": "Quantidade de dicas inválida! Considere que o programa deve receber ao menos 1 dica!",
-  "HINT_QTD_MAX": "Quantidade de dicas inválida! Considere que o programa deve receber no máximo 80 dicas!",
-  "DATA_LINE": "Insercao invalida! Ja existe o numero %s na linha %s!",
-  "DATA_COLUMN": "Insercao invalida! Ja existe o numero %s na coluna %s!",
-  "DATA_AREA": "Insercao invalida! Ja existe o numero %s na area referente a (%s,%s)!",
-  "DATA_HINT": "Inserção inválida! Na área já tem uma dica!",
-  "HINT_DATA": "(%s,%s) e uma dica!",
-  "BATCH_INPUT": "A jogada (%s,%s) = %s eh invalida!",
-  "HINT_CONFIG": "Configuracao de dicas invalida."
+	"ARGS_WRONG": "Parâmetros inválidos! Digite -h ou --help para obter ajuda!",
+	"INPUT": "A jogada (%s,%s) = %s eh invalida!",
+	"HINT_CONFIG": "Configuracao de dicas invalida.",
+	"FILE_404": "O arquivo %s não foi encontrado!",
+	"HINT_QTD_MIN": "Quantidade de dicas inválida! Considere que o programa deve receber ao menos 1 dica!",
+	"HINT_QTD_MAX": "Quantidade de dicas inválida! Considere que o programa deve receber no máximo 80 dicas!",
+	"DATA_LINE": "Insercao invalida! Ja existe o numero %s na linha %s!",
+	"DATA_COLUMN": "Insercao invalida! Ja existe o numero %s na coluna %s!",
+	"DATA_AREA": "Insercao invalida! Ja existe o numero %s na area referente a (%s,%s)!",
+	"DATA_HINT": "(%s,%s) e uma dica!",
+	"DELETE_INPUT": "A jogada D%s,%s eh invalida!",
+	"GENERIC_INPUT": "A jogada %s eh invalida!"
 }

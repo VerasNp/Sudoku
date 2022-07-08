@@ -1,159 +1,262 @@
-import collections
 import re
 
 from modules.dictionary import search_key_by_value
 from modules.json import get_json_key_content
-from modules.list import sanitize_list
-from modules.utils import dd
+from modules.sanitize import sanitize_string
+
+
+def set_error_message(
+	err_message: dict,
+	data: any = None,
+	batch_mode: bool = False):
+	if data is not None:
+		if batch_mode:
+			print(get_json_key_content(err_message["message"], err_message["key"]) % data)
+		else:
+			raise Exception(get_json_key_content(err_message["message"], err_message["key"]) % data)
+	else:
+		if batch_mode:
+			print(get_json_key_content(err_message["message"], err_message["key"]) % data)
+		else:
+			raise Exception(get_json_key_content(err_message["message"], err_message["key"]))
 
 
 def validate_input_format(
 	data: any,
 	message: dict,
-	hint=False):
-	"""
-	Validates input format
-	:param data:
-	:param message:
-	:param batch:
-	:param hint:
-	:return:
-	"""
-	if hint:
+	hint: bool = False,
+	batch_mode: bool = False):
+	if isinstance(data, list):
 		for i in range(len(data)):
 			if hint:
-				if re.match(r"^[A-I],[1-9]:[1-9]$", data[i]):
-					continue
-				else:
+				if not re.match(r"[A-I],[1-9]:[1-9]$", data[i]):
+					exit(get_json_key_content(message["path"], message["key"]))
+			else:
+				if not re.match(r"\s*[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data[i]):
 					set_error_message(
-						message=message
-					)
-		return
+						err_message={
+							"message": "resources.messages.err.pt_br",
+							"key": "GENERIC_INPUT",
+							"data": True},
+						data=data[i],
+						batch_mode=batch_mode)
 	else:
-		if re.match(r"^[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data) or re.match(r"^D[A-Ia-i],[1-9]$", data):
-			return
+		if hint:
+			if not re.match(r"[A-I],[1-9]:[1-9]$", data):
+				exit(get_json_key_content(message["path"], message["key"]))
 		else:
-			set_error_message(message, data)
+			if not re.match(r"\s*[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data):
+				set_error_message(
+					err_message={"message": "resources.messages.err.pt_br", "key": "GENERIC_INPUT", "data": True},
+					data=sanitize_string(data=data, mode="rmv_wtspc"),
+					batch_mode=batch_mode)
+				return False
+		return True
 
 
-def validate_play(matrix, column, line, number, hint=False, batch=False):
-	validate_play_hint = True
+def validate_play(
+	matrix: list,
+	column: int,
+	line: int,
+	number: int,
+	hint: bool = False,
+	batch_mode: bool = False):
+	play_not_override_hint = True
+
 	if not hint:
-		validate_play_hint = validate_play_is_hint(matrix, column, line, number, batch)
+		play_not_override_hint = validate_play_override_hint(matrix, column, line, number, batch_mode)
 
-	if (validate_play_hint and
-		validate_area(matrix, column, line, number, batch) and
-		validate_line(matrix, column, line, number, batch) and
-		validate_column(matrix, column, line, number, batch)):
+	if (
+		play_not_override_hint and
+		validate_area(matrix, column, line, number, hint, batch_mode) and
+		validate_line(matrix, column, line, number, hint, batch_mode) and
+		validate_column(matrix, column, line, number, hint, batch_mode)
+	):
 		return True
 	else:
 		return False
 
 
-def validate_play_is_hint(matrix, column, line, number, batch):
+def validate_play_override_hint(
+	matrix: list,
+	column: int,
+	line: int,
+	number: int = None,
+	batch_mode: bool = False,
+	is_delete: bool = False):
 	if matrix[line][column]["hint"]:
-		col = search_key_by_value("COL", column)
-		lin = search_key_by_value("LIN", line)
-		if batch:
-			set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
-							  (col, lin, number),
-							  True)
-			return False
+		column = search_key_by_value("COL", column)
+		line = search_key_by_value("LIN", line)
+
+		if batch_mode:
+			if is_delete:
+				set_error_message(
+					err_message={"message": "resources.messages.err.pt_br", "key": "DELETE_INPUT", "data": True},
+					data=(column, line),
+					batch_mode=True)
+			else:
+				set_error_message(
+					err_message={"message": "resources.messages.err.pt_br", "key": "INPUT", "data": True},
+					data=(column, line, number),
+					batch_mode=True)
 		else:
-			set_error_message({"message": "resources.messages.err.pt_br", "key": "HINT_DATA", "data": True}, (col, lin))
-			return False
+			set_error_message(
+				err_message={"message": "resources.messages.err.pt_br", "key": "DATA_HINT", "data": True},
+				data=(column, line),
+				batch_mode=False)
+		return False
 	return True
 
 
-def validate_area(matrix, column, line, number, batch):
+def validate_area(
+	matrix: list,
+	column: int,
+	line: int,
+	number: int,
+	hint: bool = False,
+	batch_mode: bool = False):
 	val = True
-	if column == 0 or column == 1 or column == 2:
+	if (
+		column == 0 or
+		column == 1 or
+		column == 2):
 		if line == 0 or line == 1 or line == 2:
-			val = check_area(matrix, number, batch, column, line, 0, 2, 0, 2)
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=0, end_line=2, start_column=0,
+				end_column=2, hint=hint)
 		elif line == 3 or line == 4 or line == 5:
-			val = check_area(matrix, number, batch, column, line, 3, 5, 0, 2)
-		elif line == 6 or line == 7 or line <= 8:
-			val = check_area(matrix, number, batch, column, line, 6, 8, 0, 2)
-	elif column == 3 or column == 4 or column == 5:
-		if line == 0 or line == 1 or line == 2:
-			val = check_area(matrix, number, batch, column, line, 0, 2, 3, 5)
-		elif line == 3 or line == 4 or line == 5:
-			val = check_area(matrix, number, batch, column, line, 3, 5, 3, 5)
-		elif line == 6 or line == 5 or line == 8:
-			val = check_area(matrix, number, batch, column, line, 6, 8, 3, 5)
-	elif column == 6 or column == 7 or column == 8:
-		if line == 0 or line == 1 or line == 2:
-			val = check_area(matrix, number, batch, column, line, 0, 2, 6, 8)
-		elif line == 3 or line == 4 or line == 5:
-			val = check_area(matrix, number, batch, column, line, 3, 5, 6, 8)
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=3, end_line=5, start_column=0,
+				end_column=2, hint=hint)
 		elif line == 6 or line == 7 or line == 8:
-			val = check_area(matrix, number, batch, column, line, 6, 8, 6, 8)
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=6, end_line=8, start_column=0,
+				end_column=2, hint=hint)
+	elif (
+		column == 3 or
+		column == 4 or
+		column == 5):
+		if line == 0 or line == 1 or line == 2:
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=0, end_line=2, start_column=3,
+				end_column=5, hint=hint)
+		elif line == 3 or line == 4 or line == 5:
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=3, end_line=5, start_column=3,
+				end_column=5, hint=hint)
+		elif line == 6 or line == 5 or line == 8:
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=6, end_line=8, start_column=3,
+				end_column=5, hint=hint)
+	elif (
+		column == 6 or
+		column == 7 or
+		column == 8):
+		if line == 0 or line == 1 or line == 2:
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=0, end_line=2, start_column=6,
+				end_column=8, hint=hint)
+		elif line == 3 or line == 4 or line == 5:
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=3, end_line=5, start_column=6,
+				end_column=8, hint=hint)
+		elif line == 6 or line == 7 or line == 8:
+			val = check_area(
+				matrix=matrix, number=number, batch_mode=batch_mode, start_line=6, end_line=8, start_column=6,
+				end_column=8, hint=hint)
 	return val
 
 
-def check_area(matrix, number, batch, column, line, start_line, end_line, start_column, end_column):
+def check_area(
+	matrix: list,
+	number: int,
+	start_line: int,
+	end_line: int,
+	start_column: int,
+	end_column: int,
+	hint: bool = False,
+	batch_mode: bool = False):
 	for i in range(start_line, end_line):
 		for j in range(start_column, end_column):
 			if matrix[i][j]["number"] == number:
-				if batch:
-					col = search_key_by_value("COL", column)
-					lin = search_key_by_value("LIN", line)
-					set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
-									  (col, lin, number),
-									  True)
-					return False
+				if hint:
+					exit(get_json_key_content("resources.messages.err.pt_br", "HINT_CONFIG"))
 				else:
 					column = search_key_by_value("COL", j)
 					line = search_key_by_value("LIN", i)
-					set_error_message({"message": "resources.messages.err.pt_br", "key": "DATA_AREA", "data": True},
-									  (number, column, line))
+					if batch_mode:
+						set_error_message(
+							err_message={"message": "resources.messages.err.pt_br", "key": "INPUT", "data": True},
+							data=(column, line, number),
+							batch_mode=True)
+					else:
+						set_error_message(
+							err_message={"message": "resources.messages.err.pt_br", "key": "DATA_AREA", "data": True},
+							data=(number, column, line),
+							batch_mode=False)
 					return False
-			else:
-				return True
+	return True
 
 
-def validate_line(matrix, column, line, number, batch):
+def validate_line(
+	matrix: list,
+	column: int,
+	line: int,
+	number: int,
+	hint: bool = False,
+	batch_mode: bool = False):
 	for i in range(len(matrix)):
 		for j in range(len(matrix[i])):
 			if i == line and number == matrix[i][j]["number"]:
-				col = search_key_by_value("COL", column)
-				lin = search_key_by_value("LIN", line)
-				if batch:
-					set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
-									  (col, lin, number), True)
-					return False
+				if hint:
+					exit(get_json_key_content("resources.messages.err.pt_br", "HINT_CONFIG"))
 				else:
-					set_error_message({"message": "resources.messages.err.pt_br", "key": "DATA_LINE", "data": True},
-									  (number, lin))
+					column = search_key_by_value("COL", column)
+					line = search_key_by_value("LIN", line)
+					if batch_mode:
+						set_error_message(
+							err_message={"message": "resources.messages.err.pt_br", "key": "INPUT", "data": True},
+							data=(column, line, number),
+							batch_mode=True)
+					else:
+						set_error_message(
+							err_message={"message": "resources.messages.err.pt_br", "key": "DATA_LINE", "data": True},
+							data=(number, line),
+							batch_mode=False)
 					return False
 	return True
 
 
-def validate_column(matrix, column, line, number, batch):
+def validate_column(
+	matrix: list,
+	column: int,
+	line: int,
+	number: int,
+	hint: bool = False,
+	batch_mode: bool = False):
 	for i in range(len(matrix)):
 		for j in range(len(matrix[i])):
 			if j == column and number == matrix[i][j]["number"]:
-				col = search_key_by_value("COL", column)
-				lin = search_key_by_value("LIN", line)
-				if batch:
-					set_error_message({"message": "resources.messages.err.pt_br", "key": "BATCH_INPUT", "data": True},
-									  (col, lin, number), True)
-					return False
+				if hint:
+					exit(get_json_key_content("resources.messages.err.pt_br", "HINT_CONFIG"))
 				else:
-					set_error_message({"message": "resources.messages.err.pt_br", "key": "DATA_COLUMN", "data": True},
-									  (number, col))
+					column = search_key_by_value("COL", column)
+					line = search_key_by_value("LIN", line)
+					if batch_mode:
+						set_error_message(
+							err_message={"message": "resources.messages.err.pt_br", "key": "INPUT", "data": True},
+							data=(column, line, number),
+							batch_mode=True)
+					else:
+						set_error_message(
+							err_message={"message": "resources.messages.err.pt_br", "key": "DATA_COLUMN", "data": True},
+							data=(number, column),
+							batch_mode=False)
 					return False
 	return True
 
-
-def validate_hints_qtd(data: list) -> None:
-	"""
-	Validates hints quantity
-	:param data:
-	:param batch:
-	:return:
-	"""
-	total = len(data)
+def validate_hints_qtd(hints: list) -> None:
+	total = len(hints)
 
 	if total < 1:
 		raise Exception(get_json_key_content("resources.messages.err.pt_br", "HINT_QTD_MIN"))
@@ -161,26 +264,3 @@ def validate_hints_qtd(data: list) -> None:
 		return
 	elif total > 80:
 		raise Exception(get_json_key_content("resources.messages.err.pt_br", "HINT_QTD_MAX"))
-
-
-def set_error_message(
-	message: dict,
-	data=None,
-	batch: object = False):
-	"""
-	Set error messages based on json keys
-	:param batch:
-	:param message:
-	:param data:
-	:return:
-	"""
-	if data is not None:
-		if batch:
-			print(get_json_key_content(message["message"], message["key"]) % data)
-		else:
-			raise Exception(get_json_key_content(message["message"], message["key"]) % data)
-	else:
-		if batch:
-			print(get_json_key_content(message["message"], message["key"]) % data)
-		else:
-			raise Exception(get_json_key_content(message["message"], message["key"]))
