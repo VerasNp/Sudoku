@@ -3,6 +3,7 @@ import re
 from modules.file import read_file
 from modules.sanitize import sanitize_list
 from modules.dictionary import search_data
+from modules.utils import dd
 from modules.validators import validate_play, validate_hints_qtd, validate_input_format, validate_play_override_hint
 
 

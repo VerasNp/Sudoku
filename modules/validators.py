@@ -3,6 +3,7 @@ import re
 from modules.dictionary import search_key_by_value
 from modules.json import get_json_key_content
 from modules.sanitize import sanitize_string
+from modules.utils import dd
 
 
 def set_error_message(
@@ -32,7 +33,9 @@ def validate_input_format(
 				if not re.match(r"[A-I],[1-9]:[1-9]$", data[i]):
 					exit(get_json_key_content(message["path"], message["key"]))
 			else:
-				if not re.match(r"\s*[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data[i]):
+				if not (
+					re.match(r"\s*[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data[i])
+					or re.match(r"\s*D[A-Ia-i]\s*,\s*[1-9]$", data[i])):
 					set_error_message(
 						err_message={
 							"message": "resources.messages.err.pt_br",
@@ -45,7 +48,8 @@ def validate_input_format(
 			if not re.match(r"[A-I],[1-9]:[1-9]$", data):
 				exit(get_json_key_content(message["path"], message["key"]))
 		else:
-			if not re.match(r"\s*[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data):
+			if not (re.match(r"\s*[A-Ia-i]\s*,\s*[1-9]\s*:\s*[1-9]$", data) or re.match(r"\s*D[A-Ia-i]\s*,\s*[1-9]$",
+																						data)):
 				set_error_message(
 					err_message={"message": "resources.messages.err.pt_br", "key": "GENERIC_INPUT", "data": True},
 					data=sanitize_string(data=data, mode="rmv_wtspc"),
@@ -254,6 +258,7 @@ def validate_column(
 							batch_mode=False)
 					return False
 	return True
+
 
 def validate_hints_qtd(hints: list) -> None:
 	total = len(hints)
