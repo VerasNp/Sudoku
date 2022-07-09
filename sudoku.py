@@ -5,6 +5,11 @@ from modules.game import start_game, helper
 from modules.json import get_json_key_content
 from modules.utils import dd
 
+# Trabalho de FUNDAMENTOS DE PROGRAMAÇÃO
+# Aluno | Matrícula:
+# Vitor de Oliveira Veras | 520400
+# Alan Carneiro Cabral | 541093
+# Lucas Lopes de Sousa | 537512
 
 def bootstrapper(args: list = None) -> None:
 	try:
